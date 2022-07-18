@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum Directions
+public enum Directions
 {
     up,
     right,
@@ -12,13 +12,32 @@ enum Directions
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] Directions moveDirection;
+    public Directions moveDirection;
     [SerializeField] [Range(0, 100)] float movementSpeed;
     Vector2 movement;
     Rigidbody2D rb;
 
+    [SerializeField] Enemy enemyPreset;
+
+    public int health;
+    public int damage;
+    public float attackBuildupTime;
+    public float attackDuration;
+
+    bool targetInRange = false;
+
+    bool canAttack;
+    bool attacking;
+    bool buildingUp;
+
     void Start()
     {
+        GetComponent<SpriteRenderer>().sprite = enemyPreset.sprite;
+        health = enemyPreset.health;
+        damage = enemyPreset.damage;
+        attackBuildupTime = enemyPreset.attackBuildupTime;
+        attackDuration = enemyPreset.attackDuration;
+        rb = GetComponent<Rigidbody2D>();
         switch (moveDirection)
         {
             case Directions.up:
@@ -36,8 +55,48 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        
+        rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
+    }
+
+    private void Update()
+    {
+        canAttack = !attacking && !buildingUp;
+        if (targetInRange && canAttack)
+        {
+            StartCoroutine(Attack());
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "House" || other.gameObject.tag == "Player")
+        {
+            targetInRange = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "House" || other.gameObject.tag == "Player")
+        {
+            targetInRange = false;
+        }
+    }
+
+    IEnumerator Attack()
+    {
+        buildingUp = true;
+
+        yield return new WaitForSeconds(attackBuildupTime);
+
+        buildingUp = false;
+        attacking = true;
+
+        yield return new WaitForSeconds(attackDuration);
+
+        attacking = false;
+
+        yield return null;
     }
 }
