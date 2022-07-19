@@ -27,4 +27,18 @@ public class House : MonoBehaviour
             hp = 0;
         }
     }
+
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Enemy")
+        {
+            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+
+            if (enemy.attacking && !enemy.hitTarget)
+            {
+                enemy.hitTarget = true;
+                Damage(enemy.damage);
+            }
+        }
+    }
 }

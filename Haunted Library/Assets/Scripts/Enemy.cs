@@ -11,4 +11,5 @@ public class Enemy : ScriptableObject
     public int damage;
     public float attackBuildupTime;
     public float attackDuration;
+    public float deathTime;
 }

@@ -16,3 +16,6 @@ MonoBehaviour:
   enemyName: Ghost
   health: 100
   damage: 20
+  attackBuildupTime: 0.5
+  attackDuration: 2
+  deathTime: 1

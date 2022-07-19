@@ -23,11 +23,13 @@ public class EnemyController : MonoBehaviour
     public int damage;
     public float attackBuildupTime;
     public float attackDuration;
+    public float deathTime;
 
-    bool targetInRange = false;
+    public bool targetInRange = false;
 
     bool canAttack;
-    bool attacking;
+    public bool attacking;
+    public bool hitTarget;
     bool buildingUp;
 
     void Start()
@@ -37,6 +39,7 @@ public class EnemyController : MonoBehaviour
         damage = enemyPreset.damage;
         attackBuildupTime = enemyPreset.attackBuildupTime;
         attackDuration = enemyPreset.attackDuration;
+        deathTime = enemyPreset.deathTime;
         rb = GetComponent<Rigidbody2D>();
         switch (moveDirection)
         {
@@ -57,7 +60,14 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
+        if (health > 0)
+        {
+            rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }
     }
 
     private void Update()
@@ -69,14 +79,14 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnCollisionStay2D(Collision2D other)
     {
         if (other.gameObject.tag == "House" || other.gameObject.tag == "Player")
         {
             targetInRange = true;
         }
     }
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.tag == "House" || other.gameObject.tag == "Player")
         {
@@ -96,7 +106,31 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(attackDuration);
 
         attacking = false;
+        hitTarget = false;
 
         yield return null;
+    }
+
+    IEnumerator Die()
+    {
+        // play death animation
+        // 
+
+        yield return new WaitForSeconds(deathTime);
+
+        Destroy(gameObject);
+
+        yield return null;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            attacking = false;
+            hitTarget = false;
+            StartCoroutine(Die());
+        }
     }
 }

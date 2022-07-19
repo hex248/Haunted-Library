@@ -13,16 +13,13 @@ public class EnemySpawner : MonoBehaviour
         enemyManager = FindObjectOfType<EnemyManager>();
     }
 
-    void Update()
-    {
-        
-    }
-
     public void Spawn()
     {
         GameObject chosenEnemy = enemyManager.enemies[Random.Range(0, enemyManager.enemies.Length - 1)];
         chosenEnemy.GetComponent<EnemyController>().moveDirection = enemyMovementDirection;
 
-        GameObject enemyObject = Instantiate(chosenEnemy, transform.position, Quaternion.identity, enemyManager.transform);
+        Vector3 randomOffset = new Vector3(Random.Range(-offset.x, offset.x), Random.Range(-offset.y, offset.y), 0);
+
+        GameObject enemyObject = Instantiate(chosenEnemy, transform.position + randomOffset, Quaternion.identity, enemyManager.transform);
     }
 }

@@ -11,6 +11,8 @@ public class EnemyManager : MonoBehaviour
 
     float timer = 0.0f;
 
+    public bool spawn = false;
+
 
     void Start()
     {
@@ -20,12 +22,15 @@ public class EnemyManager : MonoBehaviour
 
     void Update()
     {
-        if (timer >= spawnRate)
+        if (spawn)
         {
-            timer = 0.0f;
-            spawners[Random.Range(0, spawners.Length)].Spawn(); // spawn from random spawner
-        }
+            if (timer >= spawnRate)
+            {
+                timer = 0.0f;
+                spawners[Random.Range(0, spawners.Length)].Spawn(); // spawn from random spawner
+            }
 
-        timer += Time.deltaTime;
+            timer += Time.deltaTime;
+        }
     }
 }

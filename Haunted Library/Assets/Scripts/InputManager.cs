@@ -10,7 +10,8 @@ public class InputManager : MonoBehaviour
     public KeyCode moveDownKey;
     public KeyCode moveLeftKey;
     public KeyCode moveRightKey;
-    public KeyCode attackKey;
+    public KeyCode hammerKey;
+    public KeyCode explosionKey;
     [SerializeField] PlayerController player;
     [SerializeField] MapController map;
 
@@ -47,9 +48,13 @@ public class InputManager : MonoBehaviour
         {
             movement += new Vector2(1.0f, 0.0f);
         }
-        if (Input.GetKey(attackKey))
+        if (Input.GetKey(hammerKey))
         {
-            player.Attack();
+            player.Attack("hammer attack");
+        }
+        if (Input.GetKey(explosionKey))
+        {
+            player.Attack("explosion attack");
         }
 
         player.Movement(movement);

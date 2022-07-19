@@ -6,6 +6,7 @@ TagManager:
   tags:
   - EnemySpawner
   - House
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -48,6 +49,9 @@ TagManager:
     locked: 0
   - name: Building
     uniqueID: 861980049
+    locked: 0
+  - name: Enemy
+    uniqueID: 2249122657
     locked: 0
   - name: Player
     uniqueID: 3704860527
