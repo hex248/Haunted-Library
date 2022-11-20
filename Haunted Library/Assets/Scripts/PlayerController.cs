@@ -49,19 +49,31 @@ public class PlayerController : MonoBehaviour
 
         // update animator variables
         anim.SetFloat("velocity", Mathf.Abs(movement.magnitude));
-        if (Mathf.Abs(movement.x) >= Mathf.Abs(movement.y))
+        if (movement.x != 0 || movement.y != 0)
         {
-            anim.SetBool("facingside", true);
-            anim.SetBool("facingup", false);
-            anim.SetBool("facingdown", false);
-        }
-        else if (Mathf.Abs(movement.y) > Mathf.Abs(movement.x))
-        {
-            anim.SetBool("facingside", false);
-            anim.SetBool("facingup", false);
-            anim.SetBool("facingdown", false);
-            if (movement.y > 0) anim.SetBool("facingup", true);
-            else anim.SetBool("facingdown", true);
+            if (Mathf.Abs(movement.x) >= Mathf.Abs(movement.y))
+            {
+                anim.SetBool("facingside", true);
+                anim.SetBool("facingup", false);
+                anim.SetBool("facingdown", false);
+            
+            
+            }
+            else if (Mathf.Abs(movement.y) > Mathf.Abs(movement.x))
+            {
+                anim.SetBool("facingside", false);
+                anim.SetBool("facingup", false);
+                anim.SetBool("facingdown", false);
+                if (movement.y > 0) anim.SetBool("facingup", true);
+                else anim.SetBool("facingdown", true);
+            }
+
+            Vector3 directionToFace = new Vector3(1, 0, 0);
+            if (movement.x < 0)
+            {
+                directionToFace = new Vector3(-1, 0, 0);
+            }
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * directionToFace.x, transform.localScale.y, transform.localScale.z);
         }
     }
 
